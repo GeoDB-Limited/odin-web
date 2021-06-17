@@ -11,6 +11,7 @@
         <Nav class="mg-l16 mg-r8" />
         <UserWidget class="fx-sae" />
       </header>
+      <SearchBar />
     </template>
     <router-view />
   </template>
@@ -24,9 +25,10 @@ import { dialogs } from '@/helpers/dialogs'
 import { useAuthorization } from '@/composables/useAuthorization'
 import Nav from '@/components/Nav.vue'
 import UserWidget from '@/components/UserWidget.vue'
+import SearchBar from '@/components/SearchBar.vue'
 
 export default defineComponent({
-  components: { Nav, UserWidget },
+  components: { Nav, UserWidget, SearchBar },
   setup() {
     const _readyStates = ref({
       dialogs: false,
@@ -63,6 +65,7 @@ export default defineComponent({
 @import '~@/styles/forms.scss';
 @import '~@/styles/vue-notification.scss';
 @import '~@/styles/shortcuts.scss';
+@import '~@/styles/fonts.scss';
 
 #app {
   width: 100%;

@@ -116,6 +116,22 @@ const makeCallers = () => {
         denom: req.denom,
       })
     },
+
+    getAllBlocks: (req: { min_height: number; max_height: number }) => {
+      return sendPost(
+        `${API_CONFIG.rpc}/blockchain?minHeight=${req.min_height}&maxHeight=${req.max_height}`,
+        {
+          minHeight: req.min_height,
+          maxHeight: req.max_height,
+        }
+      )
+    },
+
+    getBlockInfo: (req: { hash: string }) => {
+      return sendPost(`${API_CONFIG.rpc}/block_by_hash?hash=0x${req.hash}`, {
+        denom: req.hash,
+      })
+    },
   }
 }
 
