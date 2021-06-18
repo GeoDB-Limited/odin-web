@@ -4,8 +4,8 @@
       <!-- TODO: temp. hidden all but validators -->
       <!-- <router-link class="nav__link" :to="{ name: 'DataSources' }">
         Data Sources
-      </router-link>
-      <router-link class="nav__link" :to="{ name: 'OracleScripts' }">
+      </router-link> -->
+      <!--<router-link class="nav__link" :to="{ name: 'OracleScripts' }">
         Oracle Scripts
       </router-link>
       <router-link class="nav__link" :to="{ name: 'Requests' }">
@@ -16,6 +16,9 @@
       </router-link> -->
       <router-link class="nav__link" :to="{ name: 'Validators' }">
         Validators
+      </router-link>
+      <router-link class="nav__link" :to="{ name: 'Blocks' }">
+        Blocks
       </router-link>
     </div>
   </div>
