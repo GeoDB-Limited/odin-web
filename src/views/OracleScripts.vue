@@ -1,90 +1,155 @@
 <template>
   <div class="oracle-scripts view-main">
     <div class="fx-row mg-b32">
-      <h2 class="view-title">Oracle scripts</h2>
+      <h2 class="view-title">Oracle Scripts</h2>
       <button
-        class="app-btn-2nd fx-sae"
+        class="app-btn create-script-btn--top fx-sae"
         type="button"
         @click="createOracleScript()"
       >
         Create oracle script
       </button>
     </div>
-    <div class="app-table">
-      <div class="oracle-scripts__table-head app-table__head">
-        <div class="app-table__cell">
-          <span class="app-table__cell-txt"> ID </span>
-        </div>
-        <div class="app-table__cell">
-          <span class="app-table__cell-txt"> Name </span>
-        </div>
-        <div class="app-table__cell">
-          <span class="app-table__cell-txt"> Description </span>
-        </div>
-        <div class="app-table__cell">
-          <span class="app-table__cell-txt"> Owner </span>
+
+    <h3 class="page-subtitle">Most requested</h3>
+    <div class="most-requested__wrapper">
+      <div class="most-requested__item">
+        <span class="most-requested__title">ODIN Standard Dataset</span>
+        <span class="most-requested__description">ODIN Standard Dataset oracle script for querying cryptocurrency prices</span>
+        <div class="most-requested__info">
+          <div class="info__item">
+            <span class="info__title">Request number</span>
+            <span>3,715,316</span>
+          </div>
+          <div class="info__item">
+            <span class="info__title">Response time</span>
+            <span>9.90 s</span>
+          </div>
         </div>
       </div>
-      <template v-if="oracleScripts?.length">
-        <button
-          v-for="item in oracleScripts"
-          :key="item.id.toString()"
-          class="app-table__row-btn"
-          type="button"
-          @click="showOracleScript(item)"
-        >
-          <div class="oracle-scripts__table-row app-table__row">
+    </div>
+
+    <h3 class="page-subtitle">All oracle scripts</h3>
+    <div class="app-table__controls mg-b32">
+      <div class="app-table__search">
+        <Input
+          classString="app-table__search-input"
+          v-model="searchInput"
+          placeholder="Search"
+          @keypress.enter="searchSubmit($event)"
+        />
+        <button @click="searchSubmit($event)" class="app-table__search-submit">
+          <SearchIcon />
+        </button>
+      </div>
+      <div class="app-table__sort">
+        <div class="app-table__sort-by">
+          <span class="app-table__sort__title"> Sort by </span>
+          <VuePicker
+            class="_vue-picker"
+            placeholder="Sort by"
+            v-model="sortBySelect"
+          >
+            <template #dropdownInner>
+              <div class="_vue-picker__dropdown-custom">
+                <VuePickerOption value="most" text="Most Requested">
+                  Most Requested
+                </VuePickerOption>
+              </div>
+              <div class="_vue-picker__dropdown-custom">
+                <VuePickerOption value="latest" text="Latest Update">
+                  Latest Update
+                </VuePickerOption>
+              </div>
+            </template>
+          </VuePicker>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-table">
+      <div class="app-table__head">
+        <span>Oracle Scripts</span>
+        <span>Description</span>
+        <span>Timestamp</span>
+      </div>
+      <div class="table__body">
+        <template v-if="oracleScripts?.length">
+          <div
+            v-for="item in oracleScripts"
+            :key="item.id.toString()"
+            class="app-table__row"
+          >
             <div class="app-table__cell">
-              <TitledSpan
-                class="app-table__cell-txt"
-                :text="item.id.toString()"
-              />
+              <span class="app-table__title">OracleScript</span>
+              <TitledLink class="table-link" :text="item.name" />
             </div>
             <div class="app-table__cell">
-              <TitledSpan class="app-table__cell-txt" :text="item.name" />
+              <span class="app-table__title">Description</span>
+              <span>{{ item.description }}</span>
             </div>
             <div class="app-table__cell">
-              <TitledSpan
-                class="app-table__cell-txt"
-                :text="item.description"
-              />
-            </div>
-            <div class="app-table__cell">
-              <TitledSpan
-                class="app-table__cell-txt"
-                :text="$cropAddress(item.owner)"
-                :title="item.owner"
-              />
+              <span class="app-table__title">Timestamp</span>
+              <div class="table-time">
+                <span>14:50</span>
+                <span>02.06.2021</span>
+              </div>
             </div>
           </div>
-        </button>
-      </template>
-      <template v-else>
-        <div class="app-table__row">
-          <p class="app-table__empty-stub">No items yet</p>
-        </div>
-      </template>
+        </template>
+        <template v-else>
+          <div>
+            <span>No items yet</span>
+          </div>
+        </template>
+      </div>
     </div>
+
+    <Pagination
+      @changePageNumber="paginationHandler($event)"
+      :blocksPerPage="4"
+      :total-length="8"
+    />
+
+    <button
+      class="app-btn create-script-btn--bottom fx-sae"
+      type="button"
+      @click="createOracleScript()"
+    >
+      Create Oracle Script
+    </button>
   </div>
 </template>
 
 <script lang="ts">
+import { defineComponent, ref } from 'vue'
+import router from '@/router'
 import { callers } from '@/api/callers'
 import { showOracleScriptFormDialog } from '@/components/modals/OracleScriptFormModal.vue'
-import { showOracleScriptDialog } from '@/components/modals/OracleScriptModal.vue'
-import TitledSpan from '@/components/TitledSpan.vue'
-import router from '@/router'
 import { OracleScript } from '@provider/codec/oracle/v1/oracle'
-import { defineComponent, ref } from 'vue'
+import TitledLink from '@/components/TitledLink.vue'
+import Pagination from '@/components/pagination/pagination.vue'
 
 export default defineComponent({
-  components: { TitledSpan },
+  components: {
+    TitledLink,
+    Pagination,
+  },
   setup() {
     const oracleScripts = ref()
+
     const loadOracleScripts = async () => {
       const response = await callers.getOracleScripts(100)
       console.debug('OracleScripts:', response)
-      oracleScripts.value = response.oracleScripts
+      const testData = [
+        { id: '111', description: 'orcl desc', name: 'oracle name1' },
+        { id: '222', description: 'orcl desc', name: 'oracle name2' },
+        { id: '333', description: 'orcl desc', name: 'oracle name3' },
+        { id: '444', description: 'orcl desc', name: 'oracle name4' },
+        { id: '555', description: 'orcl desc', name: 'oracle name5' },
+      ]
+      oracleScripts.value = testData
+      // oracleScripts.value = response.oracleScripts
     }
     loadOracleScripts()
 
@@ -97,28 +162,80 @@ export default defineComponent({
       })
     }
 
-    const showOracleScript = (oracleScript: OracleScript) => {
-      showOracleScriptDialog(
-        {
-          onRequestCreated: (d) => {
-            d.kill()
-            router.push({ name: 'Requests' })
-          },
-        },
-        { oracleScript }
-      )
+    // search field
+    const searchInput = ref()
+    const searchSubmit = (event: Event | InputEvent | MouseEvent) => {
+      event.preventDefault()
+      console.log('value: ', searchInput.value)
     }
 
-    return { oracleScripts, createOracleScript, showOracleScript }
+    const sortBySelect = ref('most')
+
+    return {
+      oracleScripts,
+      createOracleScript,
+      searchInput,
+      searchSubmit,
+      sortBySelect,
+    }
   },
 })
 </script>
 
-<style scoped>
-.oracle-scripts__table-head,
-.oracle-scripts__table-row {
-  grid:
-    auto /
-    minmax(2rem, 0.1fr) minmax(8rem, 0.5fr) minmax(8rem, 1fr) minmax(8rem, 0.5fr);
+<style lang="scss" scoped>
+.app-table {
+  &__title {
+    display: none;
+    font-size: 1.4rem;
+  }
+
+  &__row {
+    padding: 3.6rem 0 4.4rem;
+  }
+
+  .table-time {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.table-link {
+  text-decoration: none;
+  color: var(--clr__action);
+}
+
+.create-script-btn {
+  &--bottom {
+    display: none;
+    width: 100%;
+    @media (max-width: 768px) {
+      display: block;
+    }
+  }
+  &--top {
+    display: block;
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .app-table {
+    &__head {
+      display: none;
+    }
+
+    &__title {
+      display: inline-block;
+      min-width: 170px;
+      margin-right: 2.4rem;
+    }
+
+    &__row {
+      grid: none;
+      padding: 3.4rem 0 1.6rem;
+    }
+  }
 }
 </style>
