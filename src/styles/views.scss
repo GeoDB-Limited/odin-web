@@ -1,6 +1,6 @@
 .view-main {
   width: 100%;
-  max-width: 140rem;
+  max-width: 128.8rem;
   padding: 0 3.2rem;
   margin: 0 auto;
 }
@@ -8,7 +8,7 @@
 .header-wrapper {
   padding: 2.5rem 3.2rem;
   width: 100%;
-  max-width: 140rem;
+  max-width: 128.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,6 +27,12 @@ h2.view-title {
   font-weight: 400;
 }
 
+h3.view-subtitle {
+  font-size: 2.4rem;
+  line-height: 3.2rem;
+  font-weight: 400;
+}
+
 @media (max-width: 768px) {
   .header-wrapper {
     position: relative;
@@ -36,6 +42,10 @@ h2.view-title {
   }
   h2.view-title {
     font-size: 2.4rem;
+  }
+  h3.view-subtitle {
+    font-size: 2rem;
+    line-height: 2.4rem;
   }
   .view-main {
     padding: 1.6rem;
