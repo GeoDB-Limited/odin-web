@@ -11,25 +11,19 @@
       </button>
     </div>
 
-    <h3 class="page-subtitle">Most requested</h3>
-    <div class="most-requested__wrapper">
-      <div class="most-requested__item">
-        <span class="most-requested__title">ODIN Standard Dataset</span>
-        <span class="most-requested__description">ODIN Standard Dataset oracle script for querying cryptocurrency prices</span>
-        <div class="most-requested__info">
-          <div class="info__item">
-            <span class="info__title">Request number</span>
-            <span>3,715,316</span>
-          </div>
-          <div class="info__item">
-            <span class="info__title">Response time</span>
-            <span>9.90 s</span>
-          </div>
-        </div>
-      </div>
+    <h3 class="view-subtitle mg-b24">Most requested</h3>
+    <div
+      class="most-requested__block mg-b40"
+      v-if="mostRequestedScripts?.length"
+    >
+      <OracleScriptCard
+        v-for="item in mostRequestedScripts"
+        :key="item.id.toString()"
+        :oracleScript="item"
+      />
     </div>
 
-    <h3 class="page-subtitle">All oracle scripts</h3>
+    <h3 class="view-subtitle mg-b24">All oracle scripts</h3>
     <div class="app-table__controls mg-b32">
       <div class="app-table__search">
         <Input
@@ -82,7 +76,7 @@
           >
             <div class="app-table__cell">
               <span class="app-table__title">OracleScript</span>
-              <TitledLink class="table-link" :text="item.name" />
+              <TitledLink class="app-table__link" :text="item.name" />
             </div>
             <div class="app-table__cell">
               <span class="app-table__title">Description</span>
@@ -90,7 +84,7 @@
             </div>
             <div class="app-table__cell">
               <span class="app-table__title">Timestamp</span>
-              <div class="table-time">
+              <div class="app-table__time">
                 <span>14:50</span>
                 <span>02.06.2021</span>
               </div>
@@ -123,24 +117,74 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import router from '@/router'
 import { callers } from '@/api/callers'
 import { showOracleScriptFormDialog } from '@/components/modals/OracleScriptFormModal.vue'
-import { OracleScript } from '@provider/codec/oracle/v1/oracle'
+import OracleScriptCard from '@/components/OracleScriptCard.vue'
+import Input from '@/components/inputs/Input.vue'
+import SearchIcon from '@/components/icons/SearchIcon.vue'
 import TitledLink from '@/components/TitledLink.vue'
 import Pagination from '@/components/pagination/pagination.vue'
 
 export default defineComponent({
   components: {
+    OracleScriptCard,
     TitledLink,
+    Input,
+    SearchIcon,
     Pagination,
   },
   setup() {
     const oracleScripts = ref()
+    const mostRequestedScripts = ref()
 
     const loadOracleScripts = async () => {
       const response = await callers.getOracleScripts(100)
+      console.log(response);
       console.debug('OracleScripts:', response)
+      const testMostRequested = [
+        {
+          id: '111',
+          description: 'ODIN Standard Dataset oracle script for querying cryptocurrency prices',
+          name: 'ODIN Standard Dataset (Crypto)',
+          requestsNumber: '3,715,316',
+          responseTime: '9.90s',
+        },
+        {
+          id: '222',
+          description: 'ODIN Standard Dataset oracle script for querying cryptocurrency prices',
+          name: 'ODIN Standard Dataset (Crypto)',
+          requestsNumber: '3,715,316',
+          responseTime: '9.90s',
+        },
+        {
+          id: '333',
+          description: 'ODIN Standard Dataset oracle script for querying cryptocurrency prices',
+          name: 'ODIN Standard Dataset (Crypto)',
+          requestsNumber: '3,715,316',
+          responseTime: '9.90s',
+        },
+        {
+          id: '444',
+          description: 'ODIN Standard Dataset oracle script for querying cryptocurrency prices',
+          name: 'ODIN Standard Dataset (Crypto)',
+          requestsNumber: '3,715,316',
+          responseTime: '9.90s',
+        },
+        {
+          id: '555',
+          description: 'ODIN Standard Dataset oracle script for querying cryptocurrency prices',
+          name: 'ODIN Standard Dataset (Crypto)',
+          requestsNumber: '3,715,316',
+          responseTime: '9.90s',
+        },
+        {
+          id: '666',
+          description: 'ODIN Standard Dataset oracle script for querying cryptocurrency prices',
+          name: 'ODIN Standard Dataset (Crypto)',
+          requestsNumber: '3,715,316',
+          responseTime: '9.90s',
+        },
+      ]
       const testData = [
         { id: '111', description: 'orcl desc', name: 'oracle name1' },
         { id: '222', description: 'orcl desc', name: 'oracle name2' },
@@ -148,7 +192,8 @@ export default defineComponent({
         { id: '444', description: 'orcl desc', name: 'oracle name4' },
         { id: '555', description: 'orcl desc', name: 'oracle name5' },
       ]
-      oracleScripts.value = testData
+      oracleScripts.value = [...testData]
+      mostRequestedScripts.value = [...testMostRequested]
       // oracleScripts.value = response.oracleScripts
     }
     loadOracleScripts()
@@ -171,37 +216,95 @@ export default defineComponent({
 
     const sortBySelect = ref('most')
 
+    // Pagination
+    const paginationHandler = (num: number) => {
+      console.log('change page: ', num)
+    }
+
     return {
       oracleScripts,
+      mostRequestedScripts,
       createOracleScript,
       searchInput,
       searchSubmit,
       sortBySelect,
+      paginationHandler,
     }
   },
 })
 </script>
 
 <style lang="scss" scoped>
-.app-table {
-  &__title {
-    display: none;
-    font-size: 1.4rem;
-  }
-
-  &__row {
-    padding: 3.6rem 0 4.4rem;
-  }
-
-  .table-time {
-    display: flex;
-    flex-direction: column;
-  }
+.most-requested__block {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 2.4rem;
 }
 
-.table-link {
-  text-decoration: none;
-  color: var(--clr__action);
+.app-table {
+  &__controls {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 2rem;
+  }
+
+  &__controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__sort {
+    gap: 2.4rem;
+    &__title {
+      margin-right: 1.6rem;
+    }
+  }
+
+  &__search {
+    display: flex;
+    align-items: center;
+    border-bottom: 0.1rem solid transparent;
+    &-submit {
+      width: 4.8rem;
+      height: 4.8rem;
+      border-bottom: 0.1rem solid #ced4da;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.5s ease;
+      svg {
+        fill: #212529;
+      }
+      &:hover {
+        background: var(--clr__action);
+        svg {
+          fill: #fff;
+        }
+      }
+    }
+
+    &-input {
+      border: none;
+      border-radius: 0;
+      border-bottom: 0.1rem solid #ced4da;
+      &:focus {
+        border: none;
+        border-bottom: 0.1rem solid var(--clr__action);
+      }
+    }
+
+    &:hover {
+      border-bottom: 0.1rem solid var(--clr__action);
+      .app-table__search-submit,
+      .app-table__search-input {
+        border: none;
+        border-bottom: 0.1rem solid var(--clr__action);
+      }
+    }
+  }
 }
 
 .create-script-btn {
@@ -220,22 +323,42 @@ export default defineComponent({
   }
 }
 
-@media screen and (max-width: 768px) {
+@media (max-width: 768px) {
   .app-table {
-    &__head {
-      display: none;
+    &__controls {
+      flex-direction: column;
+      margin-bottom: 0;
     }
 
-    &__title {
-      display: inline-block;
-      min-width: 170px;
-      margin-right: 2.4rem;
+    &__search {
+      width: 100%;
+      margin-bottom: 1.6rem;
+
+      &-input {
+        width: 100%;
+      }
     }
 
-    &__row {
-      grid: none;
-      padding: 3.4rem 0 1.6rem;
+    &__sort {
+      width: 100%;
+
+      &-by {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .vue-picker {
+        width: 100%;
+      }
     }
+  }
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+  .most-requested__block {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow: auto;
   }
 }
 </style>
