@@ -74,10 +74,13 @@
           >
             <div class="app-table__cell">
               <span class="app-table__title">Transaction hash</span>
-              <TitledLink
+              <!-- <TitledLink
                 class="app-table__cell-txt app-table__link"
                 :text="`0x${item.hash}`"
-              />
+              /> -->
+              <span class="app-table__cell-txt app-table__link">
+                {{ `0x${item.hash}` }}
+              </span>
             </div>
             <div class="app-table__cell">
               <span class="app-table__title">Type</span>
@@ -85,10 +88,13 @@
             </div>
             <div class="app-table__cell">
               <span class="app-table__title">Block</span>
-              <TitledLink
+              <!-- <TitledLink
                 class="app-table__cell-txt app-table__link"
                 :text="item.block.toString()"
-              />
+              /> -->
+              <span class="app-table__cell-txt app-table__link">
+                {{ item.block.toString() }}
+              </span>
             </div>
             <div class="app-table__cell">
               <span class="app-table__title">Date and time</span>
@@ -96,17 +102,23 @@
             </div>
             <div class="app-table__cell">
               <span class="app-table__title">Sender</span>
-              <TitledLink
+              <!-- <TitledLink
                 class="app-table__cell-txt app-table__link"
                 :text="item.sender"
-              />
+              /> -->
+              <span class="app-table__cell-txt app-table__link">
+                {{ item.sender }}
+              </span>
             </div>
             <div class="app-table__cell">
               <span class="app-table__title">Receiver</span>
-              <TitledLink
+              <!-- <TitledLink
                 class="app-table__cell-txt app-table__link"
                 :text="item.receiver"
-              />
+              /> -->
+              <span class="app-table__cell-txt app-table__link">
+                {{ item.receiver }}
+              </span>
             </div>
             <div class="app-table__cell">
               <span class="app-table__title">Amount</span>
@@ -142,7 +154,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, onUnmounted, ref } from 'vue'
 import { callers } from '@/api/callers'
-import TitledLink from '@/components/TitledLink.vue'
+// import TitledLink from '@/components/TitledLink.vue'
 import Pagination from '@/components/pagination/pagination.vue'
 import { wallet } from '@/api/wallet'
 import { prepareTransaction } from '@/helpers/helpers'
@@ -153,7 +165,7 @@ import { useBooleanSemaphore } from '@/composables/useBooleanSemaphore'
 import { handleError } from '@/helpers/errors'
 
 export default defineComponent({
-  components: { TitledLink, Pagination },
+  components: { Pagination },
   setup: function () {
     const [isLoading, lockLoading, releaseLoading] = useBooleanSemaphore()
     const ITEMS_PER_PAGE = 5
