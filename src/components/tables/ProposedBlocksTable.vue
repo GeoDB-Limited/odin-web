@@ -15,10 +15,13 @@
           >
             <div class="app-table__cell">
               <span class="app-table__title">Block</span>
-              <TitledLink
+              <!-- <TitledLink
                 class="app-table__cell-txt app-table__link"
                 :text="toHex(item.blockId.hash)"
-              />
+              /> -->
+              <span class="app-table__cell-txt app-table__link">
+                {{ String(toHex(item.blockId.hash)) }}
+              </span>
             </div>
             <div class="app-table__cell">
               <span class="app-table__title">Date and time</span>
@@ -52,11 +55,11 @@
 import { defineComponent, onMounted, toRef, ref } from 'vue'
 import { toHex } from '@cosmjs/encoding'
 // import { Bech32 } from '@cosmjs/encoding'
-import TitledLink from '@/components/TitledLink.vue'
+// import TitledLink from '@/components/TitledLink.vue'
 import Pagination from '@/components/pagination/pagination.vue'
 
 export default defineComponent({
-  components: { TitledLink, Pagination },
+  components: { Pagination },
   props: {
     blocks: { type: Array, required: true },
   },

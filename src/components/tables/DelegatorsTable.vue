@@ -15,10 +15,13 @@
           >
             <div class="app-table__cell">
               <span class="app-table__title">Delegator</span>
-              <TitledLink
+              <!-- <TitledLink
                 class="app-table__cell-txt app-table__link"
                 :text="String(item.delegation.delegatorAddress)"
-              />
+              /> -->
+              <span class="app-table__cell-txt app-table__link">
+                {{ String(item.delegation.delegatorAddress) }}
+              </span>
             </div>
             <div class="app-table__cell">
               <span class="app-table__title">Balance</span>
@@ -54,11 +57,11 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, toRef } from 'vue'
-import TitledLink from '@/components/TitledLink.vue'
+// import TitledLink from '@/components/TitledLink.vue'
 import Pagination from '@/components/pagination/pagination.vue'
 
 export default defineComponent({
-  components: { TitledLink, Pagination },
+  components: { Pagination },
   props: {
     delegators: { type: Array, required: true },
   },
