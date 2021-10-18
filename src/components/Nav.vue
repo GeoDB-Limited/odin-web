@@ -2,7 +2,7 @@
   <div class="nav" :class="{ 'nav-mob': isOpen }">
     <div class="nav__wrap-cont">
       <!-- TODO: temp. hidden all but validators -->
-      <router-link
+      <!-- <router-link
         class="nav__link"
         data-text="Data Sources"
         :to="{ name: 'DataSources' }"
@@ -22,7 +22,7 @@
         :to="{ name: 'Requests' }"
       >
         <span>Requests</span>
-      </router-link>
+      </router-link> -->
       <div
         @click.stop="dropdown.show()"
         class="nav__dropdown"
@@ -66,12 +66,12 @@
           </div>
         </transition>
       </div>
-      <router-link class="nav__link" data-text="Rewards" to="/">
+      <!-- <router-link class="nav__link" data-text="Rewards" to="/">
         <span>Rewards</span>
       </router-link>
       <router-link class="nav__link" data-text="Governance" to="/">
         <span>Governance</span>
-      </router-link>
+      </router-link> -->
       <!--      <router-link class="nav__link" :to="{ name: 'Voting' }">-->
       <!--        Voting-->
       <!--      </router-link>-->

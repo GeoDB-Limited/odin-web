@@ -7,19 +7,19 @@
         <p class="view-subtitle">{{ validator?.operatorAddress }}</p>
         <CopyButton class="mg-l8" :text="String(validator?.operatorAddress)" />
       </div>
-      <div class="validator__activities validator__activities_top fx-sae">
-        <button
+      <div
+        class="validator__activities validator__activities_top fx-sae"
+        style="justify-content: flex-end"
+      >
+        <!-- Temp. hidden withdraw btn -->
+        <!-- <button
           class="app-btn app-btn_outlined app-btn_small"
           type="button"
           @click="withdraw"
         >
           Withdraw stake
-        </button>
-        <button
-          class="app-btn app-btn_small mg-l24"
-          type="button"
-          @click="delegate"
-        >
+        </button> -->
+        <button class="app-btn app-btn_small" type="button" @click="delegate">
           Delegate
         </button>
       </div>
@@ -48,12 +48,11 @@
     </template>
 
     <div class="validator__activities validator__activities_bottom">
-      <button class="app-btn app-btn_outlined" type="button" @click="withdraw">
+      <!-- Temp. hidden withdraw btn -->
+      <!-- <button class="app-btn app-btn_outlined" type="button" @click="withdraw">
         Withdraw stake
-      </button>
-      <button class="app-btn mg-l24" type="button" @click="delegate">
-        Delegate
-      </button>
+      </button> -->
+      <button class="app-btn" type="button" @click="delegate">Delegate</button>
     </div>
   </div>
 </template>
@@ -218,7 +217,7 @@ export default defineComponent({
     }
   }
   &_top {
-    display: block;
+    display: flex;
     min-width: 281px;
     @media screen and (max-width: 768px) {
       display: none;

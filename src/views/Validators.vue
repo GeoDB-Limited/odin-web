@@ -69,16 +69,17 @@
                 :status="item.isOracleValidator ? 'success' : 'error'"
               />
             </div>
-            <div class="app-table__cell">
+            <div class="app-table__cell" style="display: flex; justify-content: flex-end">
               <div class="app-table__activities">
                 <div class="app-table__activities-item">
-                  <button
+                  <!-- Temp. hidden withdrawbtn -->
+                  <!-- <button
                     class="app-btn app-btn_outlined app-btn_small"
                     type="button"
                     @click="withdraw(item)"
                   >
                     Withdraw stake
-                  </button>
+                  </button> -->
                   <button
                     class="app-btn app-btn_small mg-l24"
                     type="button"
@@ -193,7 +194,12 @@ export default defineComponent({
           else inactiveValidators.push(_updatedValidators[i])
         }
 
-        validators.value = [...activeValidators]
+        if (validatorsStatus.value === 'Active') {
+          validators.value = [...activeValidators]
+        } else if (validatorsStatus.value === 'Inactive') {
+          validators.value = [...inactiveValidators]
+        }
+
         validatorsCount.value = _validators.length
         filteredValidatorsCount.value = validators.value.length
         filterValidators(currentPage.value)
