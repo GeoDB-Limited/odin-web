@@ -43,3 +43,7 @@ export const prepareTransaction = async (
   }
   return tempArr
 }
+
+export const toggleInputType = (ref: HTMLInputElement): void => {
+  ref.setAttribute('type', ref.type === 'password' ? 'text' : 'password')
+}

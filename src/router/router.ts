@@ -7,7 +7,7 @@ import {
 
 const rootRedirector = makeRootRedirector(
   { name: 'DataSources' },
-  { name: 'Auth' }
+  { name: 'SignIn' }
 )
 const authorizedOnlyGuard = makeAuthorizedOnlyGuard({ name: 'Auth' })
 const unauthorizedOnlyGuard = makeUnauthorizedOnlyGuard({ name: 'Redirector' })
@@ -18,8 +18,15 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/auth',
     name: 'Auth',
-    beforeEnter: unauthorizedOnlyGuard,
     component: () => import(/* webpackChunkName: "auth" */ '../views/Auth.vue'),
+    children: [
+      {
+        path: 'sign_in',
+        name: 'SignIn',
+        beforeEnter: unauthorizedOnlyGuard,
+        component: () => import('../views/SignIn.vue'),
+      },
+    ],
   },
   // TODO: temp. hidden all but validators
   {

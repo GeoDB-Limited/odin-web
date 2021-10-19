@@ -1,5 +1,5 @@
 <template>
-  <router-link class="nav__link" :to="to" :title="title || text">
+  <router-link class="nav__link link" :to="to" :title="title || text">
     <span>
       {{ text }}
     </span>
@@ -26,3 +26,15 @@ export default defineComponent({
   },
 })
 </script>
+
+<style>
+.link {
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--clr__action);
+  font-weight: 400;
+  line-height: 2.4rem;
+  font-size: 16px;
+  cursor: pointer;
+}
+</style>
