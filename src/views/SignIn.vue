@@ -1,5 +1,6 @@
 <template>
   <div class="sing_in">
+    <!-- TODO: wait for backend   -->
     <!--
         <div>
           <p class="auth__copy-warning" v-if="copyWarning">
@@ -104,8 +105,6 @@ import { toggleInputType } from '@/helpers/helpers'
 import TitledLink from '@/components/TitledLink.vue'
 import { handleError } from '@/helpers/errors'
 
-// const MNEMONIC_SIZE = 24
-
 export default defineComponent({
   name: 'SignIn',
   components: { TitledLink },
@@ -127,6 +126,9 @@ export default defineComponent({
 
     /*
     // TODO: wait for backend
+
+    const MNEMONIC_SIZE = 24
+
     const copyWarning = ref(false)
     const submit = async () => {
       const auth = useAuthorization()
