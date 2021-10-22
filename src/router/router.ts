@@ -26,6 +26,12 @@ const routes: Array<RouteRecordRaw> = [
         beforeEnter: unauthorizedOnlyGuard,
         component: () => import('../views/SignIn.vue'),
       },
+      {
+        path: 'recovery',
+        name: 'Recovery',
+        beforeEnter: unauthorizedOnlyGuard,
+        component: () => import('../views/Recovery.vue'),
+      },
     ],
   },
   // TODO: temp. hidden all but validators

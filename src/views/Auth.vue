@@ -8,8 +8,13 @@
       />
     </div>
     <div class="auth__content">
+      <img
+        class="only-sm logo"
+        src="~@/assets/brand/odin-logo-black.png"
+        alt="ODIN Logo"
+      />
       <router-view v-slot="{ Component }">
-        <transition name="fade" mode="out-in">
+        <transition name="slide-fade" mode="out-in">
           <component :is="Component" />
         </transition>
       </router-view>
@@ -26,6 +31,14 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.logo {
+  position: absolute;
+  width: 9rem;
+  height: 3.4rem;
+  left: 1.6rem;
+  top: 2.4rem;
+}
+
 .auth {
   display: grid;
   grid: 100% / 1fr 0.85fr;
@@ -63,5 +76,10 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 1.6rem;
+  @media (min-width: 76.8rem) {
+    padding: 3.2rem;
+    justify-content: flex-start;
+  }
 }
 </style>
