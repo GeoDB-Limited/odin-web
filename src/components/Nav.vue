@@ -1,7 +1,6 @@
 <template>
   <div class="nav" :class="{ 'nav-mob': isOpen }">
     <div class="nav__wrap-cont">
-      <!-- TODO: temp. hidden all but validators -->
       <!-- <router-link
         class="nav__link"
         data-text="Data Sources"
