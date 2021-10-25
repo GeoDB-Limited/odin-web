@@ -1,7 +1,7 @@
 import { MsgWithdrawCoinsToAccFromTreasury } from '@provider/codec/mint/tx'
 import {
-  MsgSubmitProposal,
   MsgVote,
+  MsgSubmitProposal,
 } from '@provider/codec/cosmos/gov/v1beta1/tx'
 import {
   MsgCreateValidator,
