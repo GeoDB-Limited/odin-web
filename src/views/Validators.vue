@@ -365,7 +365,6 @@ export default defineComponent({
     display: flex;
     justify-content: flex-end;
   }
-
   & > *:not(:last-child) {
     margin-bottom: 2.4rem;
   }
