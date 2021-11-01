@@ -57,13 +57,13 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     let fileName = ref()
+
     const parseFile = (event: Event | DragEvent) => {
       const file = getEventFile(event)
       if (!file) return
       emit('update:modelValue', file)
-      console.log(file)
       fileName.value = { name: file.name, size: file.size }
-      console.log(fileName.value)
+      console.debug(file, fileName.value)
     }
 
     return { parseFile, fileName }

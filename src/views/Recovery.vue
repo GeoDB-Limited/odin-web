@@ -8,7 +8,6 @@
           :value="'seed'"
           :checked="selected.val === 'seed'"
           v-model="selected"
-          @input="radioSelect"
         />
       </div>
       <div class="recovery__content" v-if="selected?.val === 'seed'">
@@ -20,24 +19,19 @@
           :value="'file'"
           :checked="selected.val === 'file'"
           v-model="selected"
-          @input="radioSelect"
         />
       </div>
       <div class="recovery__content" v-if="selected?.val === 'file'">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. A consequatur
-        nostrum perspiciatis reprehenderit sed! At autem consectetur dignissimos
-        eaque ex, fuga harum non nostrum odit possimus quo quos repellendus
-        unde?
+        <InputFile
+          class="app-form__field-input"
+          name="data-source-executable"
+          v-model="executable"
+          :drag="true"
+        />
       </div>
 
       <div class="recovery__submit">
-        <button
-          class="app-btn w-full"
-          @click="submit"
-          :disabled="
-            selected?.val === 'seed' ? checkedSeeds.length === 0 : true
-          "
-        >
+        <button class="app-btn w-full" @click="submit" :disabled="isFill">
           Recover the wallet
         </button>
       </div>
@@ -46,19 +40,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import RadioButton from '@/components/RadioButton.vue'
 import SeedList from '@/components/SeedList.vue'
+import InputFile from '@/components/inputs/InputFile.vue'
 
 export default defineComponent({
   name: 'Recovery',
-  components: { RadioButton, SeedList },
-  setup() {
+  components: { InputFile, RadioButton, SeedList },
+  setup: function () {
     const selected = ref({ val: 'seed', name: 'Seed phrase' })
 
-    const radioSelect = (): void => {
-      console.debug('selected', selected.value)
-    }
+    const isFill = computed(() => {
+      if (selected.value.val === 'seed' && checkedSeeds.value.length >= 8) {
+        return false
+      }
+      if (selected.value.val === 'file' && executable.value !== undefined) {
+        return false
+      }
+      return true
+    })
 
     const seeds = ref([
       { id: 1, title: 'Placeholder' },
@@ -105,19 +106,29 @@ export default defineComponent({
       checkedSeeds.value = seedList
     }
 
+    const executable = ref<File>()
     const submit = (): void => {
-      if (checkedSeeds.value.length && selected.value.val === 'seed') {
-        alert(checkedSeeds.value.map((el) => el.title).join(' - '))
+      // TODO: wait for back-end
+      if (checkedSeeds.value.length >= 8 && selected.value.val === 'seed') {
+        alert(
+          checkedSeeds.value
+            .map((el) => `id: ${el.id} title: ${el.title}`)
+            .join(' | ')
+        )
+      }
+      if (executable.value && selected.value.val === 'file') {
+        alert(`${executable.value.name}: ${executable.value.size} bytes`)
       }
     }
 
     return {
       submit,
-      radioSelect,
       selected,
       seeds,
       checkedSeeds,
       fillingSeedList,
+      executable,
+      isFill,
     }
   },
 })
