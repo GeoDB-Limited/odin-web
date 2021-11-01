@@ -156,8 +156,11 @@ import { notifySuccess } from '@/helpers/notifications'
 import { useForm, validators } from '@/composables/useForm'
 import ModalBase from './ModalBase.vue'
 import { Bech32, fromBase64 } from '@cosmjs/encoding'
-import { big } from '@/helpers/bigMath'
+import { bigMath } from '@/helpers/bigMath'
 import { PubKey } from '@cosmjs/stargate/build/codec/cosmos/crypto/secp256k1/keys'
+import { coin } from '@cosmjs/amino'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { Buffer } from 'buffer'
 
 const BecomeValidatorFormModal = defineComponent({
@@ -202,7 +205,7 @@ const BecomeValidatorFormModal = defineComponent({
         validators.maxCharacters(128),
       ],
       selfDelegation: [
-        '',
+        0,
         validators.required,
         ...validators.num(0),
         validators.maxCharacters(128),
@@ -212,7 +215,6 @@ const BecomeValidatorFormModal = defineComponent({
     const onSubmit = dialogs.getHandler('onSubmit')
 
     const submit = async () => {
-      if (!form.isValid.value) return
       isLoading.value = true
       try {
         await callers.createValidator({
@@ -224,9 +226,11 @@ const BecomeValidatorFormModal = defineComponent({
             details: '',
           },
           commission: {
-            rate: big.toPrecise(form.rate.val()).toString(),
-            maxRate: big.toPrecise(form.maxRate.val()).toString(),
-            maxChangeRate: big.toPrecise(form.maxChangeRate.val()).toString(),
+            rate: bigMath.toPrecise(form.rate.val()).toString(),
+            maxRate: bigMath.toPrecise(form.maxRate.val()).toString(),
+            maxChangeRate: bigMath
+              .toPrecise(form.maxChangeRate.val())
+              .toString(),
           },
           minSelfDelegation: form.minDelegation.val(),
           delegatorAddress: wallet.account.address,
@@ -241,29 +245,28 @@ const BecomeValidatorFormModal = defineComponent({
               key: Buffer.from(fromBase64(form.pubKey.val())),
             }).finish(),
           },
-          value: {
-            denom: 'loki',
-            amount: form.selfDelegation.val(),
-          },
+          value: coin(form.selfDelegation.val(), 'loki'),
         })
+
         onSubmit()
         notifySuccess('Promoted to validators election')
       } catch (error) {
         handleError(error)
-      } finally {
-        isLoading.value = false
       }
+      isLoading.value = false
     }
 
     // TODO: remove fakeForm
     const _fakeForm = () => {
       form.moniker.val('validator-' + loremIpsum({ units: 'words', count: 1 }))
-      form.rate.val(big.fromPrecise('100000000000000000').toString())
-      form.maxRate.val(big.fromPrecise('200000000000000000').toString())
-      form.maxChangeRate.val(big.fromPrecise('100000000000000000').toString())
+      form.rate.val(bigMath.fromPrecise('100000000000000000').toString())
+      form.maxRate.val(bigMath.fromPrecise('200000000000000000').toString())
+      form.maxChangeRate.val(
+        bigMath.fromPrecise('100000000000000000').toString()
+      )
       form.pubKey.val('YVo5TzlCK5Y5C+7lnOKMlHZKoGfLrEKhmpci3xNs5HA=')
       form.minDelegation.val('1')
-      form.selfDelegation.val('10000000')
+      form.selfDelegation.val(10000000)
     }
 
     _fakeForm()
