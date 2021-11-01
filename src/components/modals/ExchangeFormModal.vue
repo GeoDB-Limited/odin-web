@@ -111,6 +111,8 @@ const ExchangeFormModal = defineComponent({
     const onClose = preventIf(dialogs.getHandler('onClose'), isLoading)
 
     const submit = async () => {
+      if (!form.isValid.value) return
+
       isLoading.value = true
       try {
         await callers.createBinanceExchange({
@@ -124,8 +126,9 @@ const ExchangeFormModal = defineComponent({
         notifySuccess('Exchange created')
       } catch (error) {
         handleError(error)
+      } finally {
+        isLoading.value = false
       }
-      isLoading.value = false
     }
 
     const approxDestAmount = useRateAutoCalc(

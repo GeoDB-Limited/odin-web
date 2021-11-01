@@ -1,5 +1,5 @@
 import { callers } from '@/api/callers'
-import { bigMath } from '@/helpers/bigMath'
+import { big } from '@/helpers/bigMath'
 import { TallyResult } from '@provider/codec/cosmos/gov/v1beta1/gov'
 import { computed, ComputedRef, onUnmounted, Ref, ref } from 'vue'
 
@@ -17,13 +17,13 @@ const _loadPowerConst = async () => {
 
   const lokiSupply = supply
     .filter((el) => el.denom === 'loki')
-    .reduce((acc, cur) => bigMath.add(acc, cur.amount), bigMath.zero)
+    .reduce((acc, cur) => big.add(acc, cur.amount), big.zero)
   const lokiPool = treasuryPool.find((el) => el.denom === 'loki')?.amount
 
   if (!lokiSupply || !lokiPool) {
     _powerConst.value = null
   } else {
-    _powerConst.value = bigMath.subtract(lokiSupply, lokiPool).toString()
+    _powerConst.value = big.subtract(lokiSupply, lokiPool).toString()
   }
 }
 
@@ -51,9 +51,9 @@ export function useVoteProgress(
     if (_powerConst.value === null) return 'N/A'
 
     const vp = tally.value[field]
-    const divided = bigMath.divide(vp, _powerConst.value, { decimals: 2 })
-    const percents = bigMath.multiply(divided, 100)
-    return `${bigMath.format(percents)}%` // TODO: translate
+    const divided = big.divide(vp, _powerConst.value, { decimals: 2 })
+    const percents = big.multiply(divided, 100)
+    return `${big.format(percents)}%` // TODO: translate
   })
 
   _runUpdater()

@@ -7,6 +7,7 @@
     v-if="errorAbiNet"
   >
     <img src="~@/assets/brand/metamask-fox.svg" alt="metamask_logo" />
+    <span>MetaMask</span>
   </button>
   <button
     v-else
@@ -17,6 +18,7 @@
     @click.prevent="openErrorForm"
   >
     <img src="~@/assets/brand/metamask-fox.svg" alt="metamask_logo" />
+    <span>MetaMask</span>
   </button>
 </template>
 
@@ -26,6 +28,7 @@ import { showMetaMaskFormDialog } from './MetaMaskModal.vue'
 import { useWeb3 } from '@/composables/useWeb3/useWeb3'
 import { callers } from '@/api/callers'
 import { showMetaMaskErrorFormDialog } from '@/components/MetaMask/MetaMaskErrorModal.vue'
+
 export default defineComponent({
   name: 'MetaMask',
   setup() {
@@ -34,6 +37,7 @@ export default defineComponent({
     const odinToLokiRate = ref()
     const burnFee = ref<number | string | null>(null)
     const errorAbiNet = ref<boolean>(false)
+
     const connectMetaMask = (): void => {
       if (burnFee.value) {
         showMetaMaskFormDialog(
@@ -46,6 +50,7 @@ export default defineComponent({
         )
       }
     }
+
     const openErrorForm = (): void => {
       showMetaMaskErrorFormDialog(
         {},
@@ -54,17 +59,22 @@ export default defineComponent({
         }
       )
     }
+
     const getOdinToLokiRate = async (): Promise<void> => {
       odinToLokiRate.value = await callers.getRate('odin', 'loki')
     }
+
     const getMaxWithdrawalPerTime = async (): Promise<void> => {
       const res = await callers.getParams()
       maxWithdrawalPerTime.value = res?.params?.maxWithdrawalPerTime[0]
     }
+
     const { contracts } = useWeb3()
+
     const getBurnFee = async (): Promise<void> => {
       burnFee.value = await contracts.odin.methods._getBurnFee().call()
     }
+
     useWeb3({
       onProviderDetected: async (): Promise<void> => {
         try {
@@ -77,40 +87,15 @@ export default defineComponent({
         }
       },
     })
-    onMounted(async (): Promise<void> => {
-      await getMaxWithdrawalPerTime()
-      await getOdinToLokiRate()
-    })
+
+    onMounted(
+      async (): Promise<void> => {
+        await getMaxWithdrawalPerTime()
+        await getOdinToLokiRate()
+      }
+    )
+
     return { connectMetaMask, burnFee, errorText, errorAbiNet, openErrorForm }
   },
 })
 </script>
-
-<style lang="scss" scoped>
-.metamask-btn {
-  padding: 0.8rem;
-  width: 4.8rem;
-  height: 4.8rem;
-  border: 1px solid var(--clr__action);
-  border-radius: 4px;
-
-  &:hover {
-    background: var(--clr__action);
-  }
-
-  &:focus {
-    border: 1px solid var(--clr__btn-normal);
-    background: var(--clr__btn-hover);
-  }
-
-  &:hover {
-    border: 1px solid transparent;
-    background: var(--clr__action);
-  }
-
-  &:active {
-    border: 1px solid transparent;
-    background: var(--clr__btn-pressed);
-  }
-}
-</style>

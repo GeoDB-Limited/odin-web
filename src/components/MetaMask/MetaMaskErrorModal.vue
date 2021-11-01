@@ -20,6 +20,7 @@ import { DialogHandler, DialogPayloadHandler, dialogs } from '@/helpers/dialogs'
 import ModalBase from '@/components/modals/ModalBase.vue'
 import { DecoratedFn } from '@/shared-types'
 import { preventIf } from '@/helpers/functions'
+
 const MetaMaskErrorFormModal = defineComponent({
   name: 'MetaMaskErrorModal',
   components: { ModalBase },
@@ -32,11 +33,13 @@ const MetaMaskErrorFormModal = defineComponent({
       dialogs.getHandler('onClose'),
       isLoading
     )
+
     return {
       onClose,
     }
   },
 })
+
 export default MetaMaskErrorFormModal
 export function showMetaMaskErrorFormDialog(
   callbacks?: {

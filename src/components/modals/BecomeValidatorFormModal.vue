@@ -156,29 +156,63 @@ import { notifySuccess } from '@/helpers/notifications'
 import { useForm, validators } from '@/composables/useForm'
 import ModalBase from './ModalBase.vue'
 import { Bech32, fromBase64 } from '@cosmjs/encoding'
-import { bigMath } from '@/helpers/bigMath'
+import { big } from '@/helpers/bigMath'
 import { PubKey } from '@cosmjs/stargate/build/codec/cosmos/crypto/secp256k1/keys'
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { Buffer } from 'buffer'
 
 const BecomeValidatorFormModal = defineComponent({
   components: { ModalBase },
   setup() {
     const form = useForm({
-      moniker: ['', validators.required],
-      pubKey: ['', validators.required, validators.erc20Address],
-      rate: ['', validators.required, ...validators.num(0)],
-      maxRate: ['', validators.required, ...validators.num(0)],
-      maxChangeRate: ['', validators.required, ...validators.num(0)],
-      minDelegation: ['', validators.required, ...validators.num(1)],
-      selfDelegation: ['', validators.required, ...validators.num(0)],
+      moniker: [
+        '',
+        validators.required,
+        validators.withOutSpaceAtStart,
+        validators.maxCharacters(128),
+      ],
+      pubKey: [
+        '',
+        validators.required,
+        validators.erc20Address,
+        validators.withOutSpaceAtStart,
+        validators.maxCharacters(128),
+      ],
+      rate: [
+        '',
+        validators.required,
+        ...validators.num(0),
+        validators.maxCharacters(14),
+      ],
+      maxRate: [
+        '',
+        validators.required,
+        ...validators.num(0),
+        validators.maxCharacters(14),
+      ],
+      maxChangeRate: [
+        '',
+        validators.required,
+        ...validators.num(0),
+        validators.maxCharacters(14),
+      ],
+      minDelegation: [
+        '',
+        validators.required,
+        ...validators.num(1),
+        validators.maxCharacters(128),
+      ],
+      selfDelegation: [
+        '',
+        validators.required,
+        ...validators.num(0),
+        validators.maxCharacters(128),
+      ],
     })
     const isLoading = ref(false)
     const onSubmit = dialogs.getHandler('onSubmit')
 
     const submit = async () => {
+      if (!form.isValid.value) return
       isLoading.value = true
       try {
         await callers.createValidator({
@@ -190,11 +224,9 @@ const BecomeValidatorFormModal = defineComponent({
             details: '',
           },
           commission: {
-            rate: bigMath.toPrecise(form.rate.val()).toString(),
-            maxRate: bigMath.toPrecise(form.maxRate.val()).toString(),
-            maxChangeRate: bigMath
-              .toPrecise(form.maxChangeRate.val())
-              .toString(),
+            rate: big.toPrecise(form.rate.val()).toString(),
+            maxRate: big.toPrecise(form.maxRate.val()).toString(),
+            maxChangeRate: big.toPrecise(form.maxChangeRate.val()).toString(),
           },
           minSelfDelegation: form.minDelegation.val(),
           delegatorAddress: wallet.account.address,
@@ -214,23 +246,21 @@ const BecomeValidatorFormModal = defineComponent({
             amount: form.selfDelegation.val(),
           },
         })
-
         onSubmit()
         notifySuccess('Promoted to validators election')
       } catch (error) {
         handleError(error)
+      } finally {
+        isLoading.value = false
       }
-      isLoading.value = false
     }
 
     // TODO: remove fakeForm
     const _fakeForm = () => {
       form.moniker.val('validator-' + loremIpsum({ units: 'words', count: 1 }))
-      form.rate.val(bigMath.fromPrecise('100000000000000000').toString())
-      form.maxRate.val(bigMath.fromPrecise('200000000000000000').toString())
-      form.maxChangeRate.val(
-        bigMath.fromPrecise('100000000000000000').toString()
-      )
+      form.rate.val(big.fromPrecise('100000000000000000').toString())
+      form.maxRate.val(big.fromPrecise('200000000000000000').toString())
+      form.maxChangeRate.val(big.fromPrecise('100000000000000000').toString())
       form.pubKey.val('YVo5TzlCK5Y5C+7lnOKMlHZKoGfLrEKhmpci3xNs5HA=')
       form.minDelegation.val('1')
       form.selfDelegation.val('10000000')

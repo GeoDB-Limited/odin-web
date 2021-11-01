@@ -1,75 +1,37 @@
 .app-btn {
   display: inline-block;
   font-size: 2rem;
-  line-height: 2.4rem;
-  background: var(--clr__btn-normal);
+  background: var(--clr__action);
   color: var(--clr__text-on-action);
-  border: 1px solid transparent; // to sync position with the outlined btn
+  border: 1px solid transparent; // to sync position with the 2nd variant
   border-radius: 0.4rem;
-  padding: 1.1rem 2.3rem;
-  cursor: pointer;
+  padding: 0.8rem 1.6rem;
+
   @include transition(background);
 
-  &_small {
-    font-size: 1.6rem;
-    padding: 0.5rem 2.3rem;
+  &:disabled, &--disabled {
+    cursor: not-allowed;
+    background: var(--clr__action-disabled);
   }
+}
 
-  &:focus {
-    color: var(--clr__text-on-action);
-    border: 1px solid var(--clr__btn-normal);
-    background: var(--clr__btn-hover);
-  }
+.app-btn-2nd {
+  display: inline-block;
+  font-size: 2rem;
+  color: var(--clr__action);
+  border: 1px solid currentColor;
+  border-radius: 0.4rem;
+  padding: 0.8rem 1.6rem;
 
-  &:hover {
-    color: var(--clr__text-on-action);
-    border: 1px solid transparent;
-    background: var(--clr__btn-hover);
-  }
-
-  &:active {
-    color: var(--clr__text-on-action);
-    border: 1px solid transparent;
-    background: var(--clr__btn-pressed);
-  }
+  @include transition(border-color);
 
   &:disabled {
-    color: var(--clr__text-on-action);
-    border: 1px solid transparent;
-    background: var(--clr__btn-disabled);
-    cursor: not-allowed;
+    color: var(--clr__action-disabled);
   }
-
-  &_outlined {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--clr__main-bg);
-    color: var(--clr__action);
-    border: 1px solid var(--clr__btn-normal);
-    svg {
-      fill: #007BFF;
-      margin: 0 1.2rem 0 0;
-    }
-    &:disabled {
-      color: var(--clr__btn-disabled);
-      border: 1px solid var(--clr__btn-disabled);
-      background: var(--clr__main-bg);
-      cursor: not-allowed;
-      svg {
-        fill: var(--clr__btn-disabled);
-      }
-    }
-    &:hover {
-      svg {
-        fill: var(--clr__text-on-action);
-      }
-    }
-  }
-
 }
 
 .app-ico-btn {
+  flex-shrink: 0;
   display: inline-block;
   width: 3.2rem;
   height: 3.2rem;

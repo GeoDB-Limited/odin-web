@@ -87,7 +87,6 @@ const makeCallers = () => {
       return sendPost(`${API_CONFIG.exBridge}/bsc/exchange`, req)
     },
     getRate: querier((qc) => qc.coinswap.unverified.rate),
-
     getTreasuryPool: querier((qc) => qc.mint.unverified.treasuryPool),
     getTotalSupply: querier((qc) => qc.bank.totalSupply),
 

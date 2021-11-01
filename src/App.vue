@@ -9,8 +9,7 @@
             alt="Logo"
             width="120"
           />
-          <Nav :isOpen="isOpen" @changeRoute="changeRoute($event)" />
-          <UserWidget class="fx-sae" />
+          <Nav :isOpen="isOpen" @changeRoute="changeRoute" />
           <BurgerMenu
             class="burger-menu"
             :isOpen="isOpen"
@@ -26,16 +25,14 @@
 </template>
 
 <script lang="ts">
-import '@invisiburu/vue-picker/dist/vue-picker.min.css'
 import { computed, defineComponent, onMounted, ref } from 'vue'
 import { dialogs } from '@/helpers/dialogs'
 import { useAuthorization } from '@/composables/useAuthorization'
 import Nav from '@/components/Nav.vue'
-import UserWidget from '@/components/UserWidget.vue'
 import BurgerMenu from '@/components/BurgerMenu.vue'
 
 export default defineComponent({
-  components: { Nav, UserWidget, BurgerMenu },
+  components: { Nav, BurgerMenu },
   setup() {
     const _readyStates = ref({
       dialogs: false,
@@ -43,6 +40,16 @@ export default defineComponent({
     const isAppReady = computed(() => {
       return Object.values(_readyStates.value).every((v) => v === true)
     })
+
+    // Burger Menu
+    const isOpen = ref<boolean>(false)
+    const burgerMenuHandler = (event: Event | MouseEvent) => {
+      event.preventDefault()
+      isOpen.value = isOpen.value !== true
+    }
+    const changeRoute = (): void => {
+      if (isOpen.value === true) isOpen.value = false
+    }
 
     // Dialogs
     const dialogsContainerRef = ref<HTMLElement>()
@@ -53,24 +60,13 @@ export default defineComponent({
       }
     })
 
-    // Burger Menu
-    const isOpen = ref(false)
-    const burgerMenuHandler = (event: Event | MouseEvent) => {
-      event.preventDefault()
-      isOpen.value = isOpen.value !== true
-    }
-
-    const changeRoute = () => {
-      if (isOpen.value === true) isOpen.value = false
-    }
-
     return {
+      burgerMenuHandler,
+      isOpen,
+      changeRoute,
       isAppReady,
       dialogsContainerRef,
       isLoggedIn: useAuthorization().isLoggedIn,
-      isOpen,
-      burgerMenuHandler,
-      changeRoute,
     }
   },
 })
@@ -78,34 +74,45 @@ export default defineComponent({
 
 <style lang="scss">
 @import '~@/styles/reset.scss';
-@import '~@/styles/font.scss';
 @import '~@/styles/root.scss';
-@import '~@/styles/common.scss';
 @import '~@/styles/buttons.scss';
 @import '~@/styles/tables.scss';
 @import '~@/styles/views.scss';
 @import '~@/styles/load-fog.scss';
 @import '~@/styles/forms.scss';
-@import '~@/styles/modals.scss';
 @import '~@/styles/vue-notification.scss';
 @import '~@/styles/shortcuts.scss';
+@import '~@/styles/common.scss';
 
 #app {
+  * {
+    font-family: 'SF Display', serif;
+  }
   width: 100%;
   @include flex-container;
-}
 
-.burger-menu {
-  display: none;
-}
-
-@media (max-width: 768px) {
-  .header-wrapper {
-    gap: 0.4rem;
-  }
   .burger-menu {
-    display: flex;
-    flex-shrink: 0;
+    display: none;
+  }
+  .logo {
+    width: 90px;
+    height: 34px;
+  }
+
+  @media (max-width: 768px) {
+    .header-wrapper {
+      gap: 0.4rem;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      padding: 2.5rem 1rem;
+    }
+    .burger-menu {
+      display: flex;
+      flex-shrink: 0;
+    }
   }
 }
 </style>

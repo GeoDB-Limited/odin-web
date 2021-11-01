@@ -40,9 +40,7 @@
                     You Balance (ODIN)
                   </label>
                   <input
-                    class="
-                      app-form__field-input app-form__field-input--disabled
-                    "
+                    class="app-form__field-input app-form__field-input--disabled"
                     type="text"
                     v-model="odinBalanceOnProvider"
                     disabled
@@ -55,9 +53,7 @@
                     }})
                   </label>
                   <input
-                    class="
-                      app-form__field-input app-form__field-input--disabled
-                    "
+                    class="app-form__field-input app-form__field-input--disabled"
                     type="text"
                     :value="maxWithdrawalPerTime.amount"
                     disabled
@@ -79,9 +75,7 @@
                     Expected amount (LOKI)
                   </label>
                   <input
-                    class="
-                      app-form__field-input app-form__field-input--disabled
-                    "
+                    class="app-form__field-input app-form__field-input--disabled"
                     type="text"
                     :value="expectedAmount"
                     disabled
@@ -116,7 +110,7 @@ import { handleError } from '@/helpers/errors'
 import { useForm, validators } from '@/composables/useForm'
 import ModalBase from '@/components/modals/ModalBase.vue'
 import { useWeb3 } from '@/composables/useWeb3/useWeb3'
-import { bigMath, bigFromPrecise } from '@/helpers/bigMath'
+import { big, bigFromPrecise } from '@/helpers/bigMath'
 import { wallet } from '@/api/wallet'
 import { QueryRateResponse } from '@provider/codec/coinswap/query'
 import { Coin } from '@provider/codec/cosmos/base/v1beta1/coin'
@@ -143,24 +137,21 @@ const MetaMaskFormModal = defineComponent({
 
     const _calcAmount = (value: string | null): BigNumber | null => {
       if (!value) return null
-      const decimals = bigMath.pow(10, 18)
-      return bigMath.multiply(value, decimals)
+      const decimals = big.pow(10, 18)
+      return big.multiply(value, decimals)
     }
 
     const _calcNet = memoize((value: string | null): BigNumber | null => {
       if (!value) return null
 
-      const feeFactor = bigMath.divide(props.burnFee, 10000, { decimals: 2 })
-      const fee = bigMath.multiply(value, feeFactor)
-      return bigMath.subtract(value, fee)
+      const feeFactor = big.divide(props.burnFee, 10000, { decimals: 2 })
+      const fee = big.multiply(value, feeFactor)
+      return big.subtract(value, fee)
     })
 
     const _calcExpected = memoize((value: NumLike | null): BigNumber | null => {
       if (!value) return null
-      return bigMath.multiply(
-        value,
-        bigMath.fromPrecise(props.odinToLokiRate.rate)
-      )
+      return big.multiply(value, big.fromPrecise(props.odinToLokiRate.rate))
     })
 
     const form = useForm({
@@ -190,7 +181,7 @@ const MetaMaskFormModal = defineComponent({
         return
       }
 
-      expectedAmount.value = bigMath.toStrStrict(expectedRaw)
+      expectedAmount.value = big.toStrStrict(expectedRaw)
     }
 
     watch(() => form.amount.val(), _reCalcNetAndExpected)

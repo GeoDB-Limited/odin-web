@@ -153,6 +153,7 @@ const RequestFormModal = defineComponent({
     const onClose = preventIf(dialogs.getHandler('onClose'), isLoading)
 
     const submit = async () => {
+      if (!form.isValid.value) return
       isLoading.value = true
       try {
         await callers.createRequest({
@@ -176,8 +177,9 @@ const RequestFormModal = defineComponent({
         notifySuccess('Oracle Script created')
       } catch (error) {
         handleError(error)
+      } finally {
+        isLoading.value = false
       }
-      isLoading.value = false
     }
 
     return {

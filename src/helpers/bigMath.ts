@@ -103,7 +103,7 @@ export function bigToStrStrict(num: NumLike): string {
   })
 }
 
-export const bigMath = {
+export const big = {
   multiply: bigMultiply,
   divide: bigDivide,
   add: bigAdd,

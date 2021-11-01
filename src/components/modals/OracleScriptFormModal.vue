@@ -95,6 +95,7 @@ const OracleScriptFormModal = defineComponent({
     const onSubmit = dialogs.getHandler('onSubmit')
 
     const submit = async () => {
+      if (!form.isValid.value) return
       const codeFileParsed = await _parseCodeFile()
       if (!codeFileParsed) return
 
@@ -114,8 +115,9 @@ const OracleScriptFormModal = defineComponent({
         notifySuccess('Oracle Script created')
       } catch (error) {
         handleError(error)
+      } finally {
+        isLoading.value = false
       }
-      isLoading.value = false
     }
 
     const _parseCodeFile = async (): Promise<Uint8Array | null> => {

@@ -89,12 +89,18 @@ const DelegateFormDialog = defineComponent({
     const lokiBalance = getBalance('loki', 'number')
 
     const form = useForm({
-      amount: ['', validators.required, ...validators.num(1, lokiBalance)],
+      amount: [
+        '',
+        validators.required,
+        validators.integer,
+        ...validators.num(1, lokiBalance),
+      ],
     })
     const isLoading = ref(false)
     const onSubmit = dialogs.getHandler('onSubmit')
 
     const submit = async () => {
+      if (!form.isValid.value) return
       isLoading.value = true
       try {
         await callers.validatorDelegate({
@@ -105,13 +111,14 @@ const DelegateFormDialog = defineComponent({
             denom: 'loki',
           },
         })
-        loadBalances()
+        await loadBalances()
         onSubmit()
         notifySuccess('Successfully delegated')
       } catch (error) {
         handleError(error)
+      } finally {
+        isLoading.value = false
       }
-      isLoading.value = false
     }
 
     return {

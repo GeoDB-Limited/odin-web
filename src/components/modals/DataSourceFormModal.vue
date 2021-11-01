@@ -123,10 +123,12 @@ const DataSourceFormModal = defineComponent({
     const onSubmit = dialogs.getHandler('onSubmit')
 
     const submit = async () => {
+      if (!form.isValid.value) return
       const executableParsed = await _parseExecutable()
       if (!executableParsed) return
 
       isLoading.value = true
+
       try {
         await callers.createDataSource({
           name: form.name.val(),
@@ -141,8 +143,9 @@ const DataSourceFormModal = defineComponent({
         notifySuccess('Data source created')
       } catch (error) {
         handleError(error)
+      } finally {
+        isLoading.value = false
       }
-      isLoading.value = false
     }
 
     const _parseExecutable = async (): Promise<Uint8Array | null> => {
