@@ -1,6 +1,5 @@
 <template>
   <div class="sing_in">
-    <!-- TODO: wait for backend   -->
     <!--
         <div>
           <p class="auth__copy-warning" v-if="copyWarning">
@@ -20,6 +19,12 @@
         </div>
        -->
 
+    <img
+      class="only-sm logo"
+      src="~@/assets/brand/odin-logo-black.png"
+      alt="ODIN Logo"
+    />
+
     <h2 class="app-title">Sign in</h2>
 
     <div class="sing_in__input">
@@ -28,7 +33,7 @@
         <TitledLink
           class="validator-card__link"
           :text="'Forgot your password?'"
-          :to="`recovery`"
+          :to="{ name: 'Recovery' }"
         />
       </div>
       <div class="sing_in__input-wrapper">
@@ -96,8 +101,10 @@
 import { defineComponent, ref, watch } from 'vue'
 import { useForm, validators } from '@/composables/useForm'
 import { toggleInputType } from '@/helpers/helpers'
-import { handleError } from '@/helpers/errors'
 import TitledLink from '@/components/TitledLink.vue'
+import { handleError } from '@/helpers/errors'
+
+// const MNEMONIC_SIZE = 24
 
 export default defineComponent({
   name: 'SignIn',
@@ -120,9 +127,6 @@ export default defineComponent({
 
     /*
     // TODO: wait for backend
-
-    const MNEMONIC_SIZE = 24
-
     const copyWarning = ref(false)
     const submit = async () => {
       const auth = useAuthorization()
@@ -174,12 +178,23 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.logo {
+  position: absolute;
+  width: 9rem;
+  height: 3.4rem;
+  left: 1.6rem;
+  top: 2.4rem;
+}
 .sing_in {
   display: grid;
+  justify-content: center;
   grid-template-columns: 1fr;
   width: 100%;
+  padding: 1.6rem;
   @media (min-width: 76.8rem) {
+    padding: 3.2rem;
     width: 39.2rem;
+    justify-content: flex-start;
   }
   &__or {
     text-align: center;
