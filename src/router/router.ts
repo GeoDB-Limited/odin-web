@@ -27,6 +27,12 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/SignIn.vue'),
       },
       {
+        path: 'create_wallet',
+        name: 'CreateWallet',
+        beforeEnter: unauthorizedOnlyGuard,
+        component: () => import('../views/CreateWallet.vue'),
+      },
+      {
         path: 'recovery',
         name: 'Recovery',
         beforeEnter: unauthorizedOnlyGuard,
