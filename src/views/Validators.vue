@@ -85,7 +85,7 @@
                     Withdraw stake
                   </button> -->
                   <button
-                    class="app-btn app-btn_small"
+                    class="app-btn app-btn_small min-width-125"
                     type="button"
                     @click="delegate(item)"
                   >
@@ -97,7 +97,7 @@
                   class="app-table__activities-item"
                 >
                   <button
-                    class="app-btn app-btn_outlined app-btn_small"
+                    class="app-btn app-btn_outlined app-btn_small min-width-125"
                     type="button"
                     @click="undelegate(item)"
                   >
@@ -400,5 +400,9 @@ export default defineComponent({
       }
     }
   }
+}
+
+.min-width-125 {
+  min-width: 12.5rem;
 }
 </style>
